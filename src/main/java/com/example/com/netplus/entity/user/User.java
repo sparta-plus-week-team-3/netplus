@@ -63,5 +63,4 @@ public class User {
             throw new IllegalArgumentException("invalid password");
         }
     }
-
 }
