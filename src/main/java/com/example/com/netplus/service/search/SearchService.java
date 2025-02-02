@@ -13,13 +13,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SearchService {
     private final QueryRepository queryRepository;
+//    private final RedisTemplate<String, List<String>> redisTemplate;
 //    private final ContentRepository contentRepository;
 
     @Transactional
     public void search(String queryString) {
-//        contentRepository.findContentLike()
-
         saveQuery(queryString);
+
+//        Pageable pageable = PageRequest.of(0, 10);
+//        Page<ContentResponse> contentResponsePage = contentRepository.findContentLike(queryString, pageable);
+//        return contentResponsePage;
     }
 
     private void saveQuery(String queryString) {
@@ -30,7 +33,8 @@ public class SearchService {
     @Transactional(readOnly = true)
     public List<String> findTopTenQueries() {
         PageRequest pageRequest = PageRequest.of(0, 10);
-        List<String> topTenQueries = queryRepository.findTopTenQueries(pageRequest);
-        return topTenQueries;
+        List<String> topTenQueryList = queryRepository.findTopTenQueries(pageRequest);
+
+        return topTenQueryList;
     }
 }
