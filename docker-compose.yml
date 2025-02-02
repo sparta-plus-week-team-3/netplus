@@ -20,6 +20,15 @@ services:
     networks:
       - app-network
 
+  redis-insight:
+    image: redis/redisinsight:latest
+    container_name: redis-insight-container
+    restart: always
+    ports:
+      - "5540:5540"
+    networks:
+      - app-network
+
 networks:
   app-network:
     name: app-network
