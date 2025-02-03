@@ -2,6 +2,7 @@ package com.example.com.netplus.controller;
 
 import com.example.com.netplus.dto.user.request.UserLoginRequest;
 import com.example.com.netplus.dto.user.request.UserSignUpRequest;
+import com.example.com.netplus.dto.user.response.UserDeleteResponse;
 import com.example.com.netplus.dto.user.response.UserLoginResponse;
 import com.example.com.netplus.dto.user.response.UserSignUpResponse;
 import com.example.com.netplus.service.UserService;
@@ -9,10 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -36,6 +34,14 @@ public class UserController {
             @Valid @RequestBody UserLoginRequest loginRequest) {
         UserLoginResponse loginResponse = userService.login(loginRequest);
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
+    }
+
+    //탈퇴
+    @PatchMapping("/delete/{userId}")
+    public ResponseEntity<UserDeleteResponse> delete(@PathVariable Long userId) {
+        userService.deletedUser(userId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
     }
 
 
