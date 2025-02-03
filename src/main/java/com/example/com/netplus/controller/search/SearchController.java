@@ -20,8 +20,13 @@ public class SearchController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/popular")
-    public ResponseEntity<List<String>> findTopTenQueries() {
-        return ResponseEntity.ok(searchService.findTopTenQueries());
+    @GetMapping("/popular/v1")
+    public ResponseEntity<List<String>> findTopTenQueriesV1() {
+        return ResponseEntity.ok(searchService.findTopTenQueriesV1());
+    }
+
+    @GetMapping("/popular/v2")
+    public ResponseEntity<List<String>> findTopTenQueriesV2() {
+        return ResponseEntity.ok(searchService.findTopTenQueriesV2());
     }
 }

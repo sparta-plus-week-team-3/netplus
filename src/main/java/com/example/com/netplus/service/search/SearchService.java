@@ -31,9 +31,17 @@ public class SearchService {
         queryRepository.save(query);
     }
 
+    @Transactional(readOnly = true)
+    public List<String> findTopTenQueriesV1() {
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        List<String> topTenQueryList = queryRepository.findTopTenQueries(pageRequest);
+
+        return topTenQueryList;
+    }
+
     @Cacheable(value = "topTenQueries")
     @Transactional(readOnly = true)
-    public List<String> findTopTenQueries() {
+    public List<String> findTopTenQueriesV2() {
         PageRequest pageRequest = PageRequest.of(0, 10);
         List<String> topTenQueryList = queryRepository.findTopTenQueries(pageRequest);
 
