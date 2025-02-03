@@ -39,9 +39,11 @@ public class UserController {
     //탈퇴
     @PatchMapping("/delete/{userId}")
     public ResponseEntity<UserDeleteResponse> delete(@PathVariable Long userId) {
-        userService.deletedUser(userId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        boolean isDeleted = userService.deletedUser(userId);
+        String message = isDeleted ? "User deleted successfully" : "User deleted";
+        UserDeleteResponse deleteResponse = new UserDeleteResponse(message);
 
+        return new ResponseEntity<>(deleteResponse, HttpStatus.OK);
     }
 
 

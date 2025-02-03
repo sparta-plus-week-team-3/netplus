@@ -39,11 +39,12 @@ public class UserService {
     }
 
     //탈퇴
-    public void deletedUser(Long userId) {
+    public boolean deletedUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         user.setDeleted(true);
         userRepository.save(user);
+        return true;
     }
 
     //public methods
