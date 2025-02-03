@@ -1,6 +1,7 @@
 package com.example.com.netplus.controller;
 
 import com.example.com.netplus.dto.content.request.CreateRequest;
+import com.example.com.netplus.dto.content.request.UpdateRequest;
 import com.example.com.netplus.dto.content.response.ContentResponse;
 import com.example.com.netplus.service.ContentService;
 import lombok.RequiredArgsConstructor;
@@ -50,4 +51,16 @@ public class ContentController {
         return ResponseEntity.ok(contentService.getContentById(contentId));
     }
 
+    /**
+     * 컨텐츠 업데이트 API
+     * contentId를 기반으로 컨텐츠 정보 수정
+     *
+     * @param contentId 수정할 컨텐츠 ID
+     * @param request   업데이트할 컨텐츠의 새로운 데이터
+     * @return 업데이트된 컨텐츠 정보를 ContentResponse로 반환
+     */
+    @PutMapping("/{contentId}")
+    public ResponseEntity<ContentResponse> updateContent(@PathVariable Long contentId, @RequestBody UpdateRequest request) {
+        return ResponseEntity.ok(contentService.updateContent(contentId, request));
+    }
 }
