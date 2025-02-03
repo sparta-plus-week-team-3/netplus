@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class Response {
+public class ContentResponse {
     private Long contentId;
     private String title;
     private String description;
