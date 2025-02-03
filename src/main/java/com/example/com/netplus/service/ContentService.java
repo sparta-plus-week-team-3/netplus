@@ -79,6 +79,21 @@ public class ContentService {
     }
 
     /**
+     * 컨텐츠 삭제
+     * contentId를 기반으로 컨텐츠를 삭제
+     * 존재하지 않는 컨텐츠 ID일 때 ContentNotFoundException 발생
+     *
+     * @param contentId 삭제할 컨텐츠 ID
+     */
+    @Transactional
+    public void deleteContent(Long contentId) {
+        if (!contentRepository.existsById(contentId)) {
+            throw new ContentNotFoundException(contentId);
+        }
+        contentRepository.deleteById(contentId);
+    }
+
+    /**
      * Content 엔티티를 ContentResponse DTO로 변환하는 메서드
      *
      * @param content 변환할 Content 엔티티

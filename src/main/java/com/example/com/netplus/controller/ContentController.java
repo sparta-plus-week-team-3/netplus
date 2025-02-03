@@ -63,4 +63,17 @@ public class ContentController {
     public ResponseEntity<ContentResponse> updateContent(@PathVariable Long contentId, @RequestBody UpdateRequest request) {
         return ResponseEntity.ok(contentService.updateContent(contentId, request));
     }
+
+    /**
+     * 컨텐츠 삭제 API
+     * contentId를 기반으로 컨텐츠를 삭제
+     *
+     * @param contentId 삭제할 컨텐츠 ID
+     * @return HTTP 204 No Content 반환
+     */
+    @DeleteMapping("/{contentId}")
+    public ResponseEntity<Void> deleteContent(@PathVariable Long contentId) {
+        contentService.deleteContent(contentId);
+        return ResponseEntity.noContent().build();
+    }
 }
