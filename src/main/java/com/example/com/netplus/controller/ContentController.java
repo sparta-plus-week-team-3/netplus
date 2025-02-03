@@ -1,8 +1,8 @@
-package com.example.com.netplus.controller.content;
+package com.example.com.netplus.controller;
 
 import com.example.com.netplus.dto.content.request.CreateRequest;
 import com.example.com.netplus.dto.content.response.Response;
-import com.example.com.netplus.service.content.ContentService;
+import com.example.com.netplus.service.ContentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

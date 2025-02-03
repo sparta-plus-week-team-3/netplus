@@ -1,4 +1,4 @@
-package com.example.com.netplus.entity.search;
+package com.example.com.netplus.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
