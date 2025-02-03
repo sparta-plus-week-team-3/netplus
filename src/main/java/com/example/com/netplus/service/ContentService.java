@@ -1,9 +1,9 @@
-package com.example.com.netplus.service.content;
+package com.example.com.netplus.service;
 
 import com.example.com.netplus.dto.content.request.CreateRequest;
 import com.example.com.netplus.dto.content.response.Response;
-import com.example.com.netplus.entity.content.Content;
-import com.example.com.netplus.repository.content.ContentRepository;
+import com.example.com.netplus.entity.Content;
+import com.example.com.netplus.repository.ContentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

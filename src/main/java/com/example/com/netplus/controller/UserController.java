@@ -1,4 +1,4 @@
-package com.example.com.netplus.controller.user;
+package com.example.com.netplus.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;

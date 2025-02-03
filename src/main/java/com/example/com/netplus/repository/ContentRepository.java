@@ -1,6 +1,6 @@
-package com.example.com.netplus.repository.content;
+package com.example.com.netplus.repository;
 
-import com.example.com.netplus.entity.content.Content;
+import com.example.com.netplus.entity.Content;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
