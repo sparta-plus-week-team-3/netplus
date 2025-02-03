@@ -1,6 +1,6 @@
-package com.example.com.netplus.repository.user;
+package com.example.com.netplus.repository;
 
-import com.example.com.netplus.entity.user.User;
+import com.example.com.netplus.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {

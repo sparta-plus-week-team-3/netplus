@@ -1,6 +1,6 @@
-package com.example.com.netplus.controller.search;
+package com.example.com.netplus.controller;
 
-import com.example.com.netplus.service.search.SearchService;
+import com.example.com.netplus.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

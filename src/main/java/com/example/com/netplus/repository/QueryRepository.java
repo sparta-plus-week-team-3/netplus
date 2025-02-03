@@ -1,6 +1,6 @@
-package com.example.com.netplus.repository.search;
+package com.example.com.netplus.repository;
 
-import com.example.com.netplus.entity.search.SearchQuery;
+import com.example.com.netplus.entity.SearchQuery;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

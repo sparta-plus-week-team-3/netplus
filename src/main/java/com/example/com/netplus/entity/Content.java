@@ -1,4 +1,4 @@
-package com.example.com.netplus.entity.content;
+package com.example.com.netplus.entity;
 
 import com.example.com.netplus.common.Category;
 import jakarta.persistence.*;

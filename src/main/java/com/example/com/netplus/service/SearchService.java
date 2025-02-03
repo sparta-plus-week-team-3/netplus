@@ -1,7 +1,7 @@
-package com.example.com.netplus.service.search;
+package com.example.com.netplus.service;
 
-import com.example.com.netplus.entity.search.SearchQuery;
-import com.example.com.netplus.repository.search.QueryRepository;
+import com.example.com.netplus.entity.SearchQuery;
+import com.example.com.netplus.repository.QueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
