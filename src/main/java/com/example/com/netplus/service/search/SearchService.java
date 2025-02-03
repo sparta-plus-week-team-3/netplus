@@ -3,6 +3,7 @@ package com.example.com.netplus.service.search;
 import com.example.com.netplus.entity.search.SearchQuery;
 import com.example.com.netplus.repository.search.QueryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,7 @@ public class SearchService {
         queryRepository.save(query);
     }
 
+    @Cacheable(value = "topTenQueries")
     @Transactional(readOnly = true)
     public List<String> findTopTenQueries() {
         PageRequest pageRequest = PageRequest.of(0, 10);
