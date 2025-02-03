@@ -1,4 +1,4 @@
-package com.example.com.netplus.dto;
+package com.example.com.netplus.dto.content.response;
 
 import com.example.com.netplus.common.Category;
 import lombok.Builder;
