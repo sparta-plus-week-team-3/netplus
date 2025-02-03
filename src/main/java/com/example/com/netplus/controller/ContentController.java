@@ -5,10 +5,9 @@ import com.example.com.netplus.dto.content.response.Response;
 import com.example.com.netplus.service.ContentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/contents")
@@ -27,4 +26,28 @@ public class ContentController {
     public ResponseEntity<Response> createContent(@RequestBody CreateRequest request) {
         return ResponseEntity.ok(contentService.createContent(request));
     }
+
+    /**
+     * 모든 컨텐츠 조회 API
+     * DB에 저장된 모든 컨텐츠 조회
+     *
+     * @return 컨텐츠 목록을 List로 반환
+     */
+    @GetMapping
+    public ResponseEntity<List<Response>> getAllContents() {
+        return ResponseEntity.ok(contentService.getAllContents());
+    }
+
+    /**
+     * 특정 컨텐츠 조회 API
+     * contentId를 기반으로 특정 컨텐츠 조회
+     *
+     * @param contentId 조회할 컨텐츠 ID
+     * @return 해당 컨텐츠 정보를 Response로 반환
+     */
+    @GetMapping("/{contentId}")
+    public ResponseEntity<Response> getContentById(@PathVariable Long contentId) {
+        return ResponseEntity.ok(contentService.getContentById(contentId));
+    }
+
 }
