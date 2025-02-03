@@ -1,5 +1,6 @@
 package com.example.com.netplus.entity;
 
+import com.example.com.netplus.config.BCrypUtil;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -62,5 +63,17 @@ public class User {
         if (!passwordPattern.matcher(password).matches()) {
             throw new IllegalArgumentException("invalid password");
         }
+    }
+
+    //비밀번호 암호화
+    public static String generateEncryptedPassword(String rawPassword) {
+        return BCrypUtil.encrypt(rawPassword);
+    }
+
+    public static Boolean matchesPassword(String rawPassword, String encodedPassword) {
+        if (!BCrypUtil.matches(rawPassword, encodedPassword)) {
+            throw new IllegalArgumentException("invalid password");
+        }
+        return true;
     }
 }
