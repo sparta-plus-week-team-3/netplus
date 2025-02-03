@@ -2,7 +2,6 @@ package com.example.com.netplus.controller;
 
 import com.example.com.netplus.dto.user.request.UserLoginRequest;
 import com.example.com.netplus.dto.user.request.UserSignUpRequest;
-import com.example.com.netplus.dto.user.response.UserDeleteResponse;
 import com.example.com.netplus.dto.user.response.UserLoginResponse;
 import com.example.com.netplus.dto.user.response.UserSignUpResponse;
 import com.example.com.netplus.service.UserService;
@@ -38,12 +37,11 @@ public class UserController {
 
     //탈퇴
     @PatchMapping("/delete/{userId}")
-    public ResponseEntity<UserDeleteResponse> delete(@PathVariable Long userId) {
+    public ResponseEntity<String> delete(@PathVariable Long userId) {
         boolean isDeleted = userService.deletedUser(userId);
         String message = isDeleted ? "User deleted successfully" : "User deleted";
-        UserDeleteResponse deleteResponse = new UserDeleteResponse(message);
 
-        return new ResponseEntity<>(deleteResponse, HttpStatus.OK);
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
 
