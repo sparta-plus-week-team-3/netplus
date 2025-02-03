@@ -38,6 +38,15 @@ public class UserService {
         return UserLoginResponse.toDto(generatedToken);
     }
 
+    //탈퇴
+    public boolean deletedUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setDeleted(true);
+        userRepository.save(user);
+        return true;
+    }
+
     //public methods
     public User getUserById(Long userId) {
         return userRepository.findById(userId)

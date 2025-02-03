@@ -4,11 +4,13 @@ import com.example.com.netplus.config.BCrypUtil;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.regex.Pattern;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @Table(name = "users")
 public class User {
@@ -28,6 +30,9 @@ public class User {
     private String password;
 
     private String name;
+
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private boolean deleted = false;
 
     public User() {
     }

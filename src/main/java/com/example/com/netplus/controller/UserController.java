@@ -9,10 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -36,6 +33,15 @@ public class UserController {
             @Valid @RequestBody UserLoginRequest loginRequest) {
         UserLoginResponse loginResponse = userService.login(loginRequest);
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
+    }
+
+    //탈퇴
+    @PatchMapping("/delete/{userId}")
+    public ResponseEntity<String> delete(@PathVariable Long userId) {
+        boolean isDeleted = userService.deletedUser(userId);
+        String message = isDeleted ? "User deleted successfully" : "User deleted";
+
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
 
