@@ -39,9 +39,18 @@ public class SearchService {
         return topTenQueryList;
     }
 
-    @Cacheable(value = "topTenQueries")
+    @Cacheable(value = "topTenQueriesV2", cacheManager = "caffeineCacheManager")
     @Transactional(readOnly = true)
     public List<String> findTopTenQueriesV2() {
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        List<String> topTenQueryList = queryRepository.findTopTenQueries(pageRequest);
+
+        return topTenQueryList;
+    }
+
+    @Cacheable(value = "topTenQueriesV3", cacheManager = "redisCacheManager")
+    @Transactional(readOnly = true)
+    public List<String> findTopTenQueriesV3() {
         PageRequest pageRequest = PageRequest.of(0, 10);
         List<String> topTenQueryList = queryRepository.findTopTenQueries(pageRequest);
 

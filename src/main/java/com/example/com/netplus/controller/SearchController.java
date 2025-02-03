@@ -29,4 +29,9 @@ public class SearchController {
     public ResponseEntity<List<String>> findTopTenQueriesV2() {
         return ResponseEntity.ok(searchService.findTopTenQueriesV2());
     }
+
+    @GetMapping("/popular/v3")
+    public ResponseEntity<List<String>> findTopTenQueriesV3() {
+        return ResponseEntity.ok(searchService.findTopTenQueriesV2());
+    }
 }
