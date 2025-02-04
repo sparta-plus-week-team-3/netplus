@@ -1,10 +1,14 @@
 package com.example.com.netplus.controller;
 
+import com.example.com.netplus.dto.content.response.ContentResponse;
 import com.example.com.netplus.service.SearchService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -14,14 +18,24 @@ import java.util.List;
 public class SearchController {
     private final SearchService searchService;
 
-    @PostMapping
-    public ResponseEntity<Void> search(@RequestParam("q") String queryString) {
-        searchService.search(queryString);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @GetMapping
+    public ResponseEntity<Page<ContentResponse>> search(@RequestParam("q") String queryString) {
+        Page<ContentResponse> contentResponsePage = searchService.search(queryString);
+        return ResponseEntity.ok(contentResponsePage);
     }
 
-    @GetMapping("/popular")
-    public ResponseEntity<List<String>> findTopTenQueries() {
-        return ResponseEntity.ok(searchService.findTopTenQueries());
+    @GetMapping("/popular/v1")
+    public ResponseEntity<List<String>> findTopTenQueriesV1() {
+        return ResponseEntity.ok(searchService.findTopTenQueriesV1());
+    }
+
+    @GetMapping("/popular/v2")
+    public ResponseEntity<List<String>> findTopTenQueriesV2() {
+        return ResponseEntity.ok(searchService.findTopTenQueriesV2());
+    }
+
+    @GetMapping("/popular/v3")
+    public ResponseEntity<List<String>> findTopTenQueriesV3() {
+        return ResponseEntity.ok(searchService.findTopTenQueriesV2());
     }
 }
