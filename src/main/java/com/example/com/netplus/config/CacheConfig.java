@@ -36,7 +36,6 @@ public class CacheConfig {
         return cacheManager;
     }
 
-    // redis
     @Bean("redisCacheManager")
     public RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
         RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory);
