@@ -5,6 +5,7 @@ import com.example.com.netplus.dto.content.request.UpdateRequest;
 import com.example.com.netplus.dto.content.response.ContentResponse;
 import com.example.com.netplus.service.ContentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,5 +76,19 @@ public class ContentController {
     public ResponseEntity<Void> deleteContent(@PathVariable Long contentId) {
         contentService.deleteContent(contentId);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 페이징 처리된 모든 컨텐츠를 조회하는 API
+     *
+     * @param page 페이지 번호
+     * @param size 페이지 당 컨텐츠 수
+     * @return 페이징 처리된 ContentResponse DTO 목록
+     */
+    @GetMapping
+    public ResponseEntity<Page<ContentResponse>> getAllContents(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(contentService.getAllContents(page, size));
     }
 }

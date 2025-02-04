@@ -7,6 +7,9 @@ import com.example.com.netplus.entity.Content;
 import com.example.com.netplus.exception.ContentNotFoundException;
 import com.example.com.netplus.repository.ContentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,6 +94,19 @@ public class ContentService {
             throw new ContentNotFoundException(contentId);
         }
         contentRepository.deleteById(contentId);
+    }
+
+    /**
+     * 페이징 처리된 모든 컨텐츠 조회
+     *
+     * @param page 페이지 번호
+     * @param size 페이지 당 컨텐츠 수
+     * @return 페이징 처리된 ContentResponse DTO 목록
+     */
+    public Page<ContentResponse> getAllContents(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Content> contentPage = contentRepository.findAll(pageable);
+        return contentPage.map(this::toResponse);
     }
 
     /**
