@@ -1,7 +1,7 @@
 package com.example.com.netplus.service;
 
 import com.example.com.netplus.common.Category;
-import com.example.com.netplus.dto.content.request.CreateRequest;
+import com.example.com.netplus.dto.content.request.ContentCreateRequest;
 import com.example.com.netplus.dto.content.request.UpdateRequest;
 import com.example.com.netplus.dto.content.response.ContentResponse;
 import com.example.com.netplus.entity.Content;
@@ -38,7 +38,7 @@ class ContentServiceTest {
     @DisplayName("컨텐츠 생성 - 성공 케이스")
     void createContent_success() {
         // given
-        CreateRequest request = CreateRequest.builder()
+        ContentCreateRequest request = ContentCreateRequest.builder()
                 .title("테스트 제목")
                 .description("테스트 설명")
                 .category(Category.ACTION)

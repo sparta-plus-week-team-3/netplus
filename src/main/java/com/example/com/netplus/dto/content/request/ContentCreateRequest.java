@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CreateRequest {
+public class ContentCreateRequest {
     private String title;
     private String description;
     private Category category;

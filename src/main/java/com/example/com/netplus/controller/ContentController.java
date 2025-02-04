@@ -1,6 +1,6 @@
 package com.example.com.netplus.controller;
 
-import com.example.com.netplus.dto.content.request.CreateRequest;
+import com.example.com.netplus.dto.content.request.ContentCreateRequest;
 import com.example.com.netplus.dto.content.request.UpdateRequest;
 import com.example.com.netplus.dto.content.response.ContentResponse;
 import com.example.com.netplus.service.ContentService;
@@ -25,7 +25,7 @@ public class ContentController {
      * @return 생성된 컨텐츠 정보를 ContentResponse 형태로 반환
      */
     @PostMapping
-    public ResponseEntity<ContentResponse> createContent(@RequestBody CreateRequest request) {
+    public ResponseEntity<ContentResponse> createContent(@RequestBody ContentCreateRequest request) {
         return ResponseEntity.ok(contentService.createContent(request));
     }
 
@@ -85,7 +85,7 @@ public class ContentController {
      * @param size 페이지 당 컨텐츠 수
      * @return 페이징 처리된 ContentResponse DTO 목록
      */
-    @GetMapping
+    @GetMapping("/paged")
     public ResponseEntity<Page<ContentResponse>> getPagedContents(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
