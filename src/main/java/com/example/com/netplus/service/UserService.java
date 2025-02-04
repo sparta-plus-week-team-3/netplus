@@ -2,10 +2,14 @@ package com.example.com.netplus.service;
 
 import com.example.com.netplus.config.JwtUtil;
 import com.example.com.netplus.dto.user.request.UserLoginRequest;
+import com.example.com.netplus.dto.user.request.UserProfileUpdateRequest;
 import com.example.com.netplus.dto.user.request.UserSignUpRequest;
 import com.example.com.netplus.dto.user.response.UserLoginResponse;
+import com.example.com.netplus.dto.user.response.UserProfileResponse;
 import com.example.com.netplus.dto.user.response.UserSignUpResponse;
 import com.example.com.netplus.entity.User;
+import com.example.com.netplus.exception.BusinessException;
+import com.example.com.netplus.exception.ErrorCode;
 import com.example.com.netplus.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,10 +51,33 @@ public class UserService {
         return true;
     }
 
+    //조회
+    public UserProfileResponse getUserProfile(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        return new UserProfileResponse(user.getUserId(), user.getEmail(), user.getPassword());
+    }
+
+    //수정
+    public UserProfileResponse updateUserProfile(Long userId, UserProfileUpdateRequest request) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (request.name() != null) {
+            user.setName(request.name());
+        }
+        if (request.email() != null) {
+            user.setEmail(request.email());
+        }
+        if (request.password() != null) {
+            user.setPassword(request.password());
+        }
+        return new UserProfileResponse(user.getUserId(), user.getEmail(), user.getPassword());
+    }
+
     //public methods
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("invalid password"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
 
@@ -58,7 +85,7 @@ public class UserService {
     private void verifyEmail(String Email) {
         User.generateEmail(Email);
         if (userRepository.existsByEmail(Email)) {
-            throw new IllegalArgumentException("invalid password");
+            throw new BusinessException(ErrorCode.DUPLICATE_EMAIL);
         }
     }
 

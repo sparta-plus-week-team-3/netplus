@@ -1,6 +1,8 @@
 package com.example.com.netplus.entity;
 
 import com.example.com.netplus.config.BCrypUtil;
+import com.example.com.netplus.exception.BusinessException;
+import com.example.com.netplus.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -51,10 +53,10 @@ public class User {
     //이메일 검증
     public static void generateEmail(String email) {
         if (email == null || email.isEmpty()) {
-            throw new IllegalArgumentException("email is null or empty");
+            throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "Email must not be empty");
         }
         if (!validateEmail(email)) {
-            throw new IllegalArgumentException("invalid email");
+            throw new BusinessException(ErrorCode.DUPLICATE_EMAIL, "Email is not valid");
         }
     }
 
@@ -66,7 +68,8 @@ public class User {
     //비밀번호 형식 검증
     public static void validatePassword(String password) {
         if (!passwordPattern.matcher(password).matches()) {
-            throw new IllegalArgumentException("invalid password");
+            throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE,
+                    "Password must contain at least 8 characters, including uppercase, lowercase, number, and special character.");
         }
     }
 
@@ -77,7 +80,7 @@ public class User {
 
     public static Boolean matchesPassword(String rawPassword, String encodedPassword) {
         if (!BCrypUtil.matches(rawPassword, encodedPassword)) {
-            throw new IllegalArgumentException("invalid password");
+            throw new BusinessException(ErrorCode.LOGIN_FAILED);
         }
         return true;
     }
