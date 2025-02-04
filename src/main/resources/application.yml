@@ -14,12 +14,12 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
-  #jwt
-jwt:
-  secretKey: "VGhpcyBpcyBhIHZlcnkgc2VjdXJlIHNlY3JldCBrZXk="
-  expiration: 3600000
-  #  redis:
+  # redis
   data:
     redis:
       host: localhost
       port: 6379
+# jwt
+jwt:
+  secretKey: "VGhpcyBpcyBhIHZlcnkgc2VjdXJlIHNlY3JldCBrZXk="
+  expiration: 3600000
