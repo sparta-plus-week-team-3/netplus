@@ -103,7 +103,7 @@ public class ContentService {
      * @param size 페이지 당 컨텐츠 수
      * @return 페이징 처리된 ContentResponse DTO 목록
      */
-    public Page<ContentResponse> getAllContents(int page, int size) {
+    public Page<ContentResponse> getPagedContents(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Content> contentPage = contentRepository.findAll(pageable);
         return contentPage.map(this::toResponse);

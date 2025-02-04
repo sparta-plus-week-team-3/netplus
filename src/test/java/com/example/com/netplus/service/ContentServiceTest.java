@@ -171,7 +171,7 @@ class ContentServiceTest {
         when(contentRepository.findAll(any(Pageable.class))).thenReturn(contentPage);
 
         // when
-        Page<ContentResponse> result = contentService.getAllContents(page, size);
+        Page<ContentResponse> result = contentService.getPagedContents(page, size);
 
         // then
         assertNotNull(result);
@@ -194,7 +194,7 @@ class ContentServiceTest {
         when(contentRepository.findAll(any(Pageable.class))).thenReturn(emptyPage);
 
         // when
-        Page<ContentResponse> result = contentService.getAllContents(page, size);
+        Page<ContentResponse> result = contentService.getPagedContents(page, size);
 
         // then
         assertNotNull(result);

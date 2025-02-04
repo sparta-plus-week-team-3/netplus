@@ -86,9 +86,9 @@ public class ContentController {
      * @return 페이징 처리된 ContentResponse DTO 목록
      */
     @GetMapping
-    public ResponseEntity<Page<ContentResponse>> getAllContents(
+    public ResponseEntity<Page<ContentResponse>> getPagedContents(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(contentService.getAllContents(page, size));
+        return ResponseEntity.ok(contentService.getPagedContents(page, size));
     }
 }
