@@ -7,9 +7,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.regex.Pattern;
 
+@Slf4j
 @Entity
 @Getter
 @Setter
@@ -39,14 +41,14 @@ public class User {
     public User() {
     }
 
-    private User(String email, String password, String name) {
+    private User(String name, String email, String password) {
+        this.name = name;
         this.email = email;
         this.password = password;
-        this.name = name;
     }
 
-    public static User create(String email, String password, String name) {
-        return new User(email, password, name);
+    public static User create(String name, String email, String password) {
+        return new User(name, email, password);
     }
 
     // 유효성 검증
@@ -78,8 +80,8 @@ public class User {
         return BCrypUtil.encrypt(rawPassword);
     }
 
-    public static Boolean matchesPassword(String rawPassword, String encodedPassword) {
-        if (!BCrypUtil.matches(rawPassword, encodedPassword)) {
+    public static Boolean matchesPassword(String requestPassword, String storagePassword) {
+        if (!BCrypUtil.matches(requestPassword, storagePassword)) {
             throw new BusinessException(ErrorCode.LOGIN_FAILED);
         }
         return true;
