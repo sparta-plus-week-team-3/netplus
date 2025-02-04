@@ -1,4 +1,4 @@
 package com.example.com.netplus.dto.user.request;
 
-public record UserSignUpRequest(String name, String email, String password) {
+public record UserSignUpRequest(String password, String name, String email) {
 }

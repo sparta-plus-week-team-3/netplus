@@ -25,17 +25,22 @@ public class UserService {
     public UserSignUpResponse signUp(UserSignUpRequest request) {
         verifyEmail(request.email());
         User.validatePassword(request.password());
-        String encrytedPassword = User.generateEncryptedPassword(request.password());
 
-        User newUser = User.create(request.email(), request.password(), encrytedPassword);
+        // 직접 BCryptPasswordEncoder를 사용하는 대신, generateEncryptedPassword 메서드를 사용
+        String encryptedPassword = User.generateEncryptedPassword(request.password());
+
+        User newUser = User.create(request.name(), request.email(), encryptedPassword);  // 암호화된 비밀번호만 사용
         User savedUser = userRepository.save(newUser);
-        return UserSignUpResponse.toDto();
+        return UserSignUpResponse.toDto(savedUser);
     }
 
     //로그인
     public UserLoginResponse login(UserLoginRequest request) {
         User foundUser = userRepository.findByEmail(request.email());
-        //1.이메일이 중복되지 않는다.
+        //1.이메일이 존재하는지 확인
+        if (foundUser == null) {
+            throw new BusinessException(ErrorCode.USER_NOT_FOUND, "user not found");
+        }
         matchPassword(request.password(), foundUser.getPassword());
         //토큰
         String generatedToken = jwtUtil.generateToken(foundUser.getUserId());
@@ -53,14 +58,16 @@ public class UserService {
 
     //조회
     public UserProfileResponse getUserProfile(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId)
+                .filter(u -> !u.isDeleted())
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
-        return new UserProfileResponse(user.getUserId(), user.getEmail(), user.getPassword());
+        return new UserProfileResponse(user.getUserId(), user.getName(), user.getEmail());
     }
 
     //수정
     public UserProfileResponse updateUserProfile(Long userId, UserProfileUpdateRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         if (request.name() != null) {
             user.setName(request.name());
@@ -68,10 +75,8 @@ public class UserService {
         if (request.email() != null) {
             user.setEmail(request.email());
         }
-        if (request.password() != null) {
-            user.setPassword(request.password());
-        }
-        return new UserProfileResponse(user.getUserId(), user.getEmail(), user.getPassword());
+        userRepository.save(user);
+        return new UserProfileResponse(user.getUserId(), user.getName(), user.getEmail());
     }
 
     //public methods
@@ -90,6 +95,8 @@ public class UserService {
     }
 
     private void matchPassword(String requestPassword, String storagePassword) {
-        User.matchesPassword(requestPassword, storagePassword);
+        if (!User.matchesPassword(requestPassword, storagePassword)) {
+            throw new BusinessException(ErrorCode.LOGIN_FAILED, "Invalid password");
+        }
     }
 }

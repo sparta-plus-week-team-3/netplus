@@ -11,7 +11,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -56,11 +55,11 @@ public class UserController {
 
     //프로필 수정
     @PatchMapping("/profile/{userId}")
-    public ResponseEntity<String> updateProfile(
+    public ResponseEntity<UserProfileResponse> updateProfile(
             @RequestBody UserProfileUpdateRequest request,
-            @AuthenticationPrincipal(expression = "userId") Long userId) {
+            @PathVariable Long userId) {
 
-        userService.updateUserProfile(userId, request);
-        return ResponseEntity.ok("Profile updated successfully");
+        UserProfileResponse userProfileResponse = userService.updateUserProfile(userId, request);
+        return ResponseEntity.ok(userProfileResponse);
     }
 }
