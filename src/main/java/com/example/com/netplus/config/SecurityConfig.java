@@ -42,7 +42,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(new JwtAccessDeniedHandler()) // 권한 부족 처리
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v1/api-docs/**").permitAll()
                         .requestMatchers("/users/login", "/users/signup").permitAll() // 로그인, 회원가입 경로는 인증 없이 접근 가능
                         .anyRequest().authenticated() // // 나머지 요청은 인증 필요
                 )
