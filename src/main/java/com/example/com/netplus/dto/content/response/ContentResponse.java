@@ -19,4 +19,11 @@ public class ContentResponse {
         this.description = content.getDescription();
         this.category = content.getCategory();
     }
+    
+    public ContentResponse(Long contentId, String title, String description, Category category) {
+        this.contentId = contentId;
+        this.title = title;
+        this.description = description;
+        this.category = category;
+    }
 }
