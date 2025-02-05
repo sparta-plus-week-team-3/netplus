@@ -3,16 +3,22 @@ package com.example.com.netplus.service;
 import com.example.com.netplus.dto.content.request.ContentCreateRequest;
 import com.example.com.netplus.dto.content.request.UpdateRequest;
 import com.example.com.netplus.dto.content.response.ContentResponse;
+import com.example.com.netplus.dto.content.response.ContentWithViewCountResponse;
 import com.example.com.netplus.entity.Content;
+import com.example.com.netplus.exception.BusinessException;
 import com.example.com.netplus.exception.ContentNotFoundException;
+import com.example.com.netplus.exception.ErrorCode;
 import com.example.com.netplus.repository.ContentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +26,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ContentService {
     private final ContentRepository contentRepository;
+    private final RedisTemplate<String, Integer> redisTemplate;
+
+    private static final String VIEW_KEY_PREFIX = "content:view:";
+    private static final String VIEWED_USER_KEY_PREFIX = "content:viewed:";
 
     /**
      * 컨텐츠 생성
@@ -122,5 +132,68 @@ public class ContentService {
                 .description(content.getDescription())
                 .category(content.getCategory())
                 .build();
+    }
+
+    @Cacheable(value = "content", key = "#id")
+    public ContentWithViewCountResponse getContentWithViewCount(Long id, String userId) {
+        // 컨텐츠를 조회하고 조회수를 증가시켜 반환
+        Content content = contentRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND));
+        int viewCount = incrementViewCount(id, userId);
+
+        ContentResponse contentResponse = ContentResponse.builder()
+                .contentId(content.getContentId())
+                .title(content.getTitle())
+                .description(content.getDescription())
+                .category(content.getCategory())
+                .build();
+
+        return ContentWithViewCountResponse.builder()
+                .content(contentResponse)
+                .viewCount(viewCount)
+                .build();
+    }
+
+    @Transactional
+    public int incrementViewCount(Long contentId, String userId) {
+        // 사용자별로 조회수 증가를 처리
+        String viewKey = VIEW_KEY_PREFIX + contentId;
+        String userViewKey = VIEWED_USER_KEY_PREFIX + userId + ":" + contentId;
+
+        // 새로운 사용자 뷰를 Redis에 설정하고 조회수가 증가한 경우 반환
+        Boolean isNewView = redisTemplate.opsForValue().setIfAbsent(userViewKey, 1, Duration.ofHours(24));
+
+        if (Boolean.TRUE.equals(isNewView)) {
+            return redisTemplate.opsForValue().increment(viewKey, 1).intValue();
+        }
+
+        Integer count = redisTemplate.opsForValue().get(viewKey);
+        return count != null ? count : 0;
+    }
+
+    public Page<ContentWithViewCountResponse> searchContents(String query, Pageable pageable) {
+        // 제목으로 검색하고, 각 컨텐츠에 대해 조회수를 포함하여 반환
+        return contentRepository.findByTitleContainingIgnoreCase(query, pageable)
+                .map(content -> {
+                    ContentResponse contentResponse = ContentResponse.builder()
+                            .contentId(content.getContentId())
+                            .title(content.getTitle())
+                            .description(content.getDescription())
+                            .category(content.getCategory())
+                            .build();
+
+                    int viewCount = getViewCount(content.getContentId());
+
+                    return ContentWithViewCountResponse.builder()
+                            .content(contentResponse)
+                            .viewCount(viewCount)
+                            .build();
+                });
+    }
+
+    private int getViewCount(Long contentId) {
+        // Redis에서 해당 컨텐츠의 조회수를 가져옴
+        Integer count = redisTemplate.opsForValue().get(VIEW_KEY_PREFIX + contentId);
+        return count != null ? count : 0;
     }
 }
