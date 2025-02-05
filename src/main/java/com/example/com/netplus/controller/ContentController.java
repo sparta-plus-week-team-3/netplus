@@ -3,19 +3,24 @@ package com.example.com.netplus.controller;
 import com.example.com.netplus.dto.content.request.ContentCreateRequest;
 import com.example.com.netplus.dto.content.request.UpdateRequest;
 import com.example.com.netplus.dto.content.response.ContentResponse;
+import com.example.com.netplus.dto.content.response.ContentWithViewCountResponse;
 import com.example.com.netplus.service.ContentService;
+import com.example.com.netplus.service.RankingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/contents")
+@RequestMapping("/api/v2/contents")
 @RequiredArgsConstructor
 public class ContentController {
     private final ContentService contentService;
+    private final RankingService rankingService;
 
     /**
      * 컨텐츠 생성 API
@@ -90,5 +95,29 @@ public class ContentController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(contentService.getPagedContents(page, size));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ContentWithViewCountResponse> getContent(@PathVariable Long id, @RequestHeader("User-Id") String userId) {
+        // ContentService에서 조회한 컨텐츠 정보와 조회수를 반환
+        ContentWithViewCountResponse content = contentService.getContentWithViewCount(id, userId);
+        return ResponseEntity.ok(content);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<ContentWithViewCountResponse>> searchContents(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        // 사용자 쿼리에 맞춰 페이징 처리된 검색 결과를 반환
+        Page<ContentWithViewCountResponse> contents = contentService.searchContents(query, PageRequest.of(page, size));
+        return ResponseEntity.ok(contents);
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<List<ContentResponse>> getPopularContents() {
+        // 랭킹 서비스에서 인기 컨텐츠 목록을 반환
+        List<ContentResponse> popularContents = rankingService.getTopContents(LocalDate.now());
+        return ResponseEntity.ok(popularContents);
     }
 }
