@@ -16,5 +16,5 @@ public interface ContentRepository extends JpaRepository<Content, Long> {
      * @param pageable 페이징 정보
      * @return 페이징 처리된 Content 엔티티 목록
      */
-    Page<Content> findAll(Pageable pageable);
+    Page<Content> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 }
