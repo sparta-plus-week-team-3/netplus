@@ -1,6 +1,6 @@
 package com.example.com.netplus.service;
 
-import com.example.com.netplus.dto.content.request.CreateRequest;
+import com.example.com.netplus.dto.content.request.ContentCreateRequest;
 import com.example.com.netplus.dto.content.request.UpdateRequest;
 import com.example.com.netplus.dto.content.response.ContentResponse;
 import com.example.com.netplus.entity.Content;
@@ -29,7 +29,7 @@ public class ContentService {
      * @return 생성된 컨텐츠 정보를 ContentResponse 형태로 반환
      */
     @Transactional
-    public ContentResponse createContent(CreateRequest request) {
+    public ContentResponse createContent(ContentCreateRequest request) {
         Content content = Content.createContent(request.getTitle(), request.getDescription(), request.getCategory());
         Content savedContent = contentRepository.save(content); // 저장소에 저장
         return toResponse(savedContent); // DTO 변환 후 반환
@@ -103,7 +103,7 @@ public class ContentService {
      * @param size 페이지 당 컨텐츠 수
      * @return 페이징 처리된 ContentResponse DTO 목록
      */
-    public Page<ContentResponse> getAllContents(int page, int size) {
+    public Page<ContentResponse> getPagedContents(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Content> contentPage = contentRepository.findAll(pageable);
         return contentPage.map(this::toResponse);
