@@ -98,9 +98,9 @@ public class ContentController {
     }
 
     @GetMapping("/{contentId}/details")
-    public ResponseEntity<ContentWithViewCountResponse> getContent(@PathVariable Long id, @RequestHeader("User-Id") String userId) {
+    public ResponseEntity<ContentWithViewCountResponse> getContent(@PathVariable Long contentId, @RequestHeader("User-Id") String userId) {
         // ContentService에서 조회한 컨텐츠 정보와 조회수를 반환
-        ContentWithViewCountResponse content = contentService.getContentWithViewCount(id, userId);
+        ContentWithViewCountResponse content = contentService.getContentWithViewCount(contentId, userId);
         return ResponseEntity.ok(content);
     }
 
