@@ -7,8 +7,12 @@ import com.example.com.netplus.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/event")
@@ -43,6 +47,16 @@ public class EventController {
     public ResponseEntity<Void> deleteEvent(@PathVariable Long eventId) {
         eventService.deleteEvent(eventId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{eventId}/participate")
+    public ResponseEntity<String> participateEvent(
+            @PathVariable Long eventId,
+            @RequestBody CreateEventRequest request,
+            @AuthenticationPrincipal(expression = "userId") Long userId
+    ) {
+        Optional<String> couponCode = eventService.participateEvent(eventId, userId, request);
+        return couponCode.map(ResponseEntity::ok).orElseGet(() -> new ResponseEntity<>("모든 쿠폰이 소진되었습니다.", HttpStatus.UNPROCESSABLE_ENTITY));
     }
 
 }
