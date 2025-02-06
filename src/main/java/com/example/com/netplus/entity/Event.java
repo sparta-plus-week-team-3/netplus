@@ -25,8 +25,6 @@ public class Event {
     private LocalDateTime startDateTime;
     @Column(name = "end_datetime")
     private LocalDateTime endDateTime;
-    @Column(name = "coupon_issued_datetime")
-    private LocalDateTime couponIssuedDateTime;
     @Column(name = "coupon_expiration_datetime")
     private LocalDateTime couponExpirationDateTime;
 

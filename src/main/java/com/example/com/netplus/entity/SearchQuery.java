@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "query")
+@Table(name = "queries")
 public class SearchQuery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
