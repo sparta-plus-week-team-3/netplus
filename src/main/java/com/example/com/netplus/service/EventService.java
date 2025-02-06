@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -44,8 +43,8 @@ public class EventService {
     }
 
     private static void validateUpdateDeleteDeadline(LocalDateTime startDateTime) {
-        LocalDateTime updateDeleteDeadline = startDateTime.minusHours(-1);
-        if (updateDeleteDeadline.isAfter(LocalDateTime.now())) {
+        LocalDateTime updateDeleteDeadline = startDateTime.minusHours(1);
+        if (updateDeleteDeadline.isBefore(LocalDateTime.now())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이벤트 시작 시간이 1시간 이상 남아있어야 합니다.");
         }
     }
@@ -77,13 +76,14 @@ public class EventService {
 
     @Transactional
     public void deleteEvent(Long eventId) {
-        Event foundEvent = eventRepository.findById(eventId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "시작 시간이 1시간 이상 남은 이벤트만 삭제할 수 있습니다."));
+        Event foundEvent = eventRepository.findById(eventId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No such event id: " + eventId));
         validateUpdateDeleteDeadline(foundEvent.getStartDateTime());
+        couponRepository.deleteCouponsByEvent(foundEvent);
         eventRepository.deleteById(foundEvent.getEventId());
     }
 
     @Transactional
-    public Optional<String> participateEvent(Long eventId, Long userId, CreateEventRequest request) {
+    public boolean participateEvent(Long eventId, Long userId) {
 
         // 이벤트 시작 시간과 끝 시간 검증
         Event foundEvent = eventRepository.findById(eventId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No such event id: " + eventId));
@@ -98,13 +98,14 @@ public class EventService {
         }
 
         String couponCode = redisTemplate.opsForSet().pop("eventCoupons::" + eventId);
-        if (couponCode != null) {
-            Coupon coupon = couponRepository.findByCode(couponCode).orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ""));
-            User userRef = userRepository.getReferenceById(userId);
-            coupon.changeUser(userRef);
-            couponRepository.save(coupon);
+        if (couponCode == null) {
+            return false;
         }
-        return Optional.ofNullable(couponCode);
+        Coupon coupon = couponRepository.findByCode(couponCode).orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ""));
+        User userRef = userRepository.getReferenceById(userId);
+        coupon.changeUser(userRef);
+        couponRepository.save(coupon);
+        return true;
     }
 
     public void existById(Long eventId) {

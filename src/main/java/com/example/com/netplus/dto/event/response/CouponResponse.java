@@ -15,7 +15,6 @@ public class CouponResponse {
     private final CouponStatus status;
     private final String nName;
     private final String description;
-    private final LocalDateTime issuedDateTime;
     private final LocalDateTime expirationDateTime;
 
     public static CouponResponse toDto(Coupon coupon) {
@@ -25,7 +24,6 @@ public class CouponResponse {
                 coupon.getStatus(),
                 coupon.getEvent().getName(),
                 coupon.getEvent().getDescription(),
-                coupon.getEvent().getCouponIssuedDateTime(),
                 coupon.getEvent().getCouponExpirationDateTime()
         );
     }

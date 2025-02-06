@@ -12,10 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
-@RequestMapping("/event")
+@RequestMapping("/events")
 @RequiredArgsConstructor
 public class EventController {
     private final EventService eventService;
@@ -49,14 +47,16 @@ public class EventController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{eventId}/participate")
+    @GetMapping("/{eventId}/participate")
     public ResponseEntity<String> participateEvent(
             @PathVariable Long eventId,
-            @RequestBody CreateEventRequest request,
-            @AuthenticationPrincipal(expression = "userId") Long userId
+            @AuthenticationPrincipal Long userId
     ) {
-        Optional<String> couponCode = eventService.participateEvent(eventId, userId, request);
-        return couponCode.map(ResponseEntity::ok).orElseGet(() -> new ResponseEntity<>("모든 쿠폰이 소진되었습니다.", HttpStatus.UNPROCESSABLE_ENTITY));
+        boolean isSuccess = eventService.participateEvent(eventId, userId);
+        if (isSuccess) {
+            return new ResponseEntity<>("쿠폰이 지급되었습니다. 쿠폰함을 확인해주세요.", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("모든 쿠폰이 소진되었습니다.", HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
 }

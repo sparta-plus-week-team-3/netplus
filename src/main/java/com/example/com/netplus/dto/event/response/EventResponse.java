@@ -15,7 +15,6 @@ public class EventResponse {
     private final Integer max;
     private final LocalDateTime startDateTime;
     private final LocalDateTime endDateTime;
-    private final LocalDateTime couponIssuedDateTime;
     private final LocalDateTime couponExpirationDateTime;
 
     public static EventResponse toDto(Event event) {
@@ -26,7 +25,6 @@ public class EventResponse {
                 event.getMax(),
                 event.getStartDateTime(),
                 event.getEndDateTime(),
-                event.getCouponIssuedDateTime(),
                 event.getCouponExpirationDateTime()
         );
     }
