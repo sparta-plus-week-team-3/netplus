@@ -19,13 +19,15 @@ public class Coupon {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    private Long eventId;
+    @ManyToOne
+    @JoinColumn(name = "event_id")
+    private Event event;
     @Enumerated(value = EnumType.STRING)
     private CouponStatus status;
 
-    public Coupon(String couponCode, Long eventId) {
+    public Coupon(String couponCode, Event event) {
         this.code = couponCode;
-        this.eventId = eventId;
+        this.event = event;
         this.status = CouponStatus.UNUSED;
     }
 

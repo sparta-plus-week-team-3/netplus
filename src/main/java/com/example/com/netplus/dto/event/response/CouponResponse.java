@@ -5,21 +5,28 @@ import com.example.com.netplus.entity.Coupon;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @AllArgsConstructor
 public class CouponResponse {
     private final Long couponId;
     private final String code;
-    private final Long eventId;
     private final CouponStatus status;
+    private final String nName;
+    private final String description;
+    private final LocalDateTime issuedDateTime;
+    private final LocalDateTime expirationDateTime;
 
     public static CouponResponse toDto(Coupon coupon) {
         return new CouponResponse(
                 coupon.getCouponId(),
                 coupon.getCode(),
-// TODO: Event 엔티티에서 필요한 정보 불러오기
-                coupon.getEventId(),
-                coupon.getStatus()
+                coupon.getStatus(),
+                coupon.getEvent().getName(),
+                coupon.getEvent().getDescription(),
+                coupon.getEvent().getCouponIssuedDateTime(),
+                coupon.getEvent().getCouponExpirationDateTime()
         );
     }
 }

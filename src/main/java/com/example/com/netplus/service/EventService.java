@@ -38,7 +38,7 @@ public class EventService {
         Event event = new Event(request);
         Event savedEvent = eventRepository.save(event);
 
-        createCoupons(savedEvent.getEventId(), request.getMax());
+        createCoupons(savedEvent, request.getMax());
 
         return EventResponse.toDto(savedEvent);
     }
@@ -69,8 +69,8 @@ public class EventService {
         Event foundEvent = eventRepository.getReferenceById(eventId);
         foundEvent.update(request);
 
-        couponRepository.deleteCouponsByEventId(eventId);
-        createCoupons(eventId, request.getMax());
+        couponRepository.deleteCouponsByEvent(foundEvent);
+        createCoupons(foundEvent, request.getMax());
 
         return EventResponse.toDto(foundEvent);
     }
@@ -93,7 +93,7 @@ public class EventService {
         }
 
         // 같은 이벤트에 참여했던 유저인지 확인
-        if (couponRepository.existsByUserUserIdAndEventId(userId, eventId)) {
+        if (couponRepository.existsByUserUserIdAndEvent(userId, foundEvent)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "you already participated in the event.");
         }
 
@@ -113,11 +113,12 @@ public class EventService {
         }
     }
 
-    private void createCoupons(Long eventId, Integer max) {
+    private void createCoupons(Event event, Integer max) {
         for (int i = 0; i < max; i++) {
-            Coupon coupon = new Coupon(eventId + "-" + i, eventId);
+
+            Coupon coupon = new Coupon(event.getEventId() + "-" + i, event);
             couponRepository.save(coupon);
-            redisTemplate.opsForSet().add("eventCoupons::" + eventId, coupon.getCode());
+            redisTemplate.opsForSet().add("eventCoupons::" + event.getEventId(), coupon.getCode());
         }
     }
 }
