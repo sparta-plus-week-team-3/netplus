@@ -5,8 +5,10 @@ import com.example.com.netplus.dto.event.request.UpdateEventRequest;
 import com.example.com.netplus.dto.event.response.EventResponse;
 import com.example.com.netplus.entity.Coupon;
 import com.example.com.netplus.entity.Event;
+import com.example.com.netplus.entity.User;
 import com.example.com.netplus.repository.CouponRepository;
 import com.example.com.netplus.repository.EventRepository;
+import com.example.com.netplus.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +28,7 @@ public class EventService {
     private final CouponRepository couponRepository;
     private final RedisTemplate<String, String> redisTemplate;
     private final CouponService couponService;
+    private final UserRepository userRepository;
 
     @Transactional
     public EventResponse createEvent(CreateEventRequest request) {
@@ -90,14 +93,15 @@ public class EventService {
         }
 
         // 같은 이벤트에 참여했던 유저인지 확인
-        if (couponRepository.existsByUserIdAndEventId(userId, eventId)) {
+        if (couponRepository.existsByUserUserIdAndEventId(userId, eventId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "you already participated in the event.");
         }
 
         String couponCode = redisTemplate.opsForSet().pop("eventCoupons::" + eventId);
         if (couponCode != null) {
             Coupon coupon = couponRepository.findByCode(couponCode).orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ""));
-            coupon.setUserId(userId);
+            User userRef = userRepository.getReferenceById(userId);
+            coupon.changeUser(userRef);
             couponRepository.save(coupon);
         }
         return Optional.ofNullable(couponCode);
@@ -111,7 +115,7 @@ public class EventService {
 
     private void createCoupons(Long eventId, Integer max) {
         for (int i = 0; i < max; i++) {
-            Coupon coupon = new Coupon(eventId + "-" + i, null, eventId);
+            Coupon coupon = new Coupon(eventId + "-" + i, eventId);
             couponRepository.save(coupon);
             redisTemplate.opsForSet().add("eventCoupons::" + eventId, coupon.getCode());
         }

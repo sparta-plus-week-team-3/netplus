@@ -10,7 +10,6 @@ import lombok.Getter;
 public class CouponResponse {
     private final Long couponId;
     private final String code;
-    private final Long userId;
     private final Long eventId;
     private final CouponStatus status;
 
@@ -18,7 +17,7 @@ public class CouponResponse {
         return new CouponResponse(
                 coupon.getCouponId(),
                 coupon.getCode(),
-                coupon.getUserId(),
+// TODO: Event 엔티티에서 필요한 정보 불러오기
                 coupon.getEventId(),
                 coupon.getStatus()
         );

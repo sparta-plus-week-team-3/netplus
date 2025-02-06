@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CouponRepository extends JpaRepository<Coupon, Long> {
-    boolean existsByUserIdAndEventId(Long userId, Long eventId);
+    boolean existsByUserUserIdAndEventId(Long userId, Long eventId);
 
-    List<Coupon> findAllByUserId(Long userId);
+    List<Coupon> findAllByUserUserId(Long userId);
 
     void deleteCouponsByEventId(Long eventId);
 

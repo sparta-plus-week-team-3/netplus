@@ -14,7 +14,7 @@ public class CouponService {
     private final CouponRepository couponRepository;
 
     public List<CouponResponse> findCoupons(Long userId) {
-        List<Coupon> coupons = couponRepository.findAllByUserId(userId);
+        List<Coupon> coupons = couponRepository.findAllByUserUserId(userId);
         return coupons.stream().map(CouponResponse::toDto).toList();
     }
 }
