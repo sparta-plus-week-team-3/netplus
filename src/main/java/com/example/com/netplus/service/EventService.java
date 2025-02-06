@@ -13,11 +13,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Service
@@ -37,7 +39,7 @@ public class EventService {
         Event event = new Event(request);
         Event savedEvent = eventRepository.save(event);
 
-        createCoupons(savedEvent, request.getMax());
+        createCoupons(savedEvent, request.getMax(), request.getCouponExpirationDateTime());
 
         return EventResponse.toDto(savedEvent);
     }
@@ -69,7 +71,7 @@ public class EventService {
         foundEvent.update(request);
 
         couponRepository.deleteCouponsByEvent(foundEvent);
-        createCoupons(foundEvent, request.getMax());
+        createCoupons(foundEvent, request.getMax(), request.getCouponExpirationDateTime());
 
         return EventResponse.toDto(foundEvent);
     }
@@ -114,12 +116,15 @@ public class EventService {
         }
     }
 
-    private void createCoupons(Event event, Integer max) {
+    private void createCoupons(Event event, Integer max, LocalDateTime expirationDateTime) {
+        SetOperations<String, String> ops = redisTemplate.opsForSet();
+        String key = "eventCoupons::" + event.getEventId();
         for (int i = 0; i < max; i++) {
 
             Coupon coupon = new Coupon(event.getEventId() + "-" + i, event);
             couponRepository.save(coupon);
-            redisTemplate.opsForSet().add("eventCoupons::" + event.getEventId(), coupon.getCode());
+            ops.add(key, coupon.getCode());
         }
+        redisTemplate.expire(key, Duration.between(LocalDateTime.now(), expirationDateTime).plusMinutes(10));
     }
 }
