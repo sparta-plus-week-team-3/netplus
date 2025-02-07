@@ -147,11 +147,11 @@ erDiagram
 * Successful Tests: 9012
 ### 로컬 캐시 적용(Caffeine Cache)
 ![Image](https://github.com/user-attachments/assets/c5d881c1-c438-4f33-a80d-df358dc999ee)
-* TPS: 141.3
+* TPS: 141.3 (미적용 대비 270%)
 * Mean Test Time: 5.92 MS
 * Successful Tests: 24619
 ### 리모트 캐시 적용(Redis Cache)
 ![Image](https://github.com/user-attachments/assets/ba9bdd39-4fff-4385-8758-3d0c8e13f857)
-* TPS: 123.4
+* TPS: 123.4 (미적용 대비 235%)
 * Mean Test Time: 7.88 MS
 * Successful Tests: 20298
