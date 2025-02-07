@@ -1,4 +1,7 @@
 ﻿# netplus
+ 
+* 25/01/31 ~ 25/02/07
+* [taejunUM](https://github.com/taejunUM), [leesuoho](https://github.com/leesuoho), [Shin-Gaeul](https://github.com/Shin-Gaeul), [cnux9](https://github.com/cnux9)
 
 ## 프로젝트 소개
 
@@ -135,7 +138,6 @@ erDiagram
 * Vuser: 1
 * Duration: 3분
 * Ramp-Up: 미적용
-* 컴퓨터 성능의 문제로 간단하게 테스트
 * 밀리세컨드 단위의 차이이긴 하지만 로컬 캐시 > 리모트 캐시 > 캐시 미적용 순으로 성능이 좋은 것을 확인할 수 있음
 
 ### 캐시 미적용
@@ -150,6 +152,6 @@ erDiagram
 * Successful Tests: 24619
 ### 리모트 캐시 적용(Redis Cache)
 ![Image](https://github.com/user-attachments/assets/ba9bdd39-4fff-4385-8758-3d0c8e13f857)
-* TPS: 7.88
+* TPS: 123.4
 * Mean Test Time: 7.88 MS
 * Successful Tests: 20298
