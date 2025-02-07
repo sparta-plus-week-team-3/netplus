@@ -20,14 +20,15 @@ public class SearchService {
     private final QueryRepository queryRepository;
     //    private final RedisTemplate<String, List<String>> redisTemplate;
     private final ContentRepository contentRepository;
+    private final ContentService contentService;
 
     @Transactional
     public Page<ContentResponse> search(String queryString) {
         saveQuery(queryString);
 
         Pageable pageable = PageRequest.of(0, 10);
-//        Page<ContentResponse> contentResponsePage = contentRepository.findContentLike(queryString, pageable);
-        Page<ContentResponse> contentResponsePage = Page.empty();
+        Page<ContentResponse> contentResponsePage = contentRepository.findContentLike(queryString, pageable).map(contentService::toResponse);
+//        Page<ContentResponse> contentResponsePage = Page.empty();
         return contentResponsePage;
     }
 

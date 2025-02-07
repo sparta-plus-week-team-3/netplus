@@ -4,7 +4,6 @@ import com.example.com.netplus.dto.content.response.ContentResponse;
 import com.example.com.netplus.entity.Content;
 import com.example.com.netplus.repository.ContentRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -49,8 +48,15 @@ public class RankingService {
         redisTemplate.opsForZSet().removeRange(key, 10, -1);
     }
 
-    @Cacheable(value = "topContents", key = "#date")
+    //    @Cacheable(value = "topContents", key = "#date")
     public List<ContentResponse> getTopContents(LocalDate date) {
+        // 레디스에 랭킹이 없을 경우 새로 만듬
+
+        String todayKey = RANKING_KEY_PREFIX + LocalDate.now();
+        if (Boolean.FALSE.equals(redisTemplate.hasKey(todayKey))) {
+            updateRanking();
+        }
+
         // 날짜별 인기 컨텐츠 조회, Redis에서 랭킹을 가져옴
         String key = RANKING_KEY_PREFIX + date;
         Set<String> topContentIds = redisTemplate.opsForZSet().reverseRange(key, 0, 9);
