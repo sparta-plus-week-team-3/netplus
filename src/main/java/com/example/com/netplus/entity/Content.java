@@ -1,4 +1,4 @@
-package com.example.com.netplus.entity.content;
+package com.example.com.netplus.entity;
 
 import com.example.com.netplus.common.Category;
 import jakarta.persistence.*;
@@ -19,4 +19,14 @@ public class Content {
     private String description;
     @Enumerated(value = EnumType.STRING)
     private Category category;
+
+    public static Content createContent(String title, String description, Category category) {
+        return new Content(null, title, description, category);
+    }
+
+    public void updateContent(String title, String description, Category category) {
+        this.title = title;
+        this.description = description;
+        this.category = category;
+    }
 }
