@@ -40,7 +40,7 @@ public class ContentService {
      */
     @Transactional
     public ContentResponse createContent(ContentCreateRequest request) {
-        Content content = Content.createContent(request.getTitle(), request.getDescription(), request.getCategory());
+        Content content = Content.createContent(request.title(), request.description(), request.category());
         Content savedContent = contentRepository.save(content); // 저장소에 저장
         return toResponse(savedContent); // DTO 변환 후 반환
     }
@@ -87,7 +87,7 @@ public class ContentService {
     public ContentResponse updateContent(Long contentId, UpdateRequest request) {
         Content content = contentRepository.findById(contentId)
                 .orElseThrow(() -> new ContentNotFoundException(contentId));
-        content.updateContent(request.getTitle(), request.getDescription(), request.getCategory());
+        content.updateContent(request.title(), request.description(), request.category());
         return toResponse(content);
     }
 
@@ -126,12 +126,12 @@ public class ContentService {
      * @return 변환된 ContentResponse DTO
      */
     private ContentResponse toResponse(Content content) {
-        return ContentResponse.builder()
-                .contentId(content.getContentId())
-                .title(content.getTitle())
-                .description(content.getDescription())
-                .category(content.getCategory())
-                .build();
+        return new ContentResponse(
+                content.getContentId(),
+                content.getTitle(),
+                content.getDescription(),
+                content.getCategory()
+        );
     }
 
     @Cacheable(value = "content", key = "#id")
@@ -141,17 +141,17 @@ public class ContentService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND));
         int viewCount = incrementViewCount(id, userId);
 
-        ContentResponse contentResponse = ContentResponse.builder()
-                .contentId(content.getContentId())
-                .title(content.getTitle())
-                .description(content.getDescription())
-                .category(content.getCategory())
-                .build();
+        ContentResponse contentResponse = new ContentResponse(
+                content.getContentId(),
+                content.getTitle(),
+                content.getDescription(),
+                content.getCategory()
+        );
 
-        return ContentWithViewCountResponse.builder()
-                .content(contentResponse)
-                .viewCount(viewCount)
-                .build();
+        return new ContentWithViewCountResponse(
+                contentResponse,
+                viewCount
+        );
     }
 
     @Transactional
@@ -175,19 +175,19 @@ public class ContentService {
         // 제목으로 검색하고, 각 컨텐츠에 대해 조회수를 포함하여 반환
         return contentRepository.findByTitleContainingIgnoreCase(query, pageable)
                 .map(content -> {
-                    ContentResponse contentResponse = ContentResponse.builder()
-                            .contentId(content.getContentId())
-                            .title(content.getTitle())
-                            .description(content.getDescription())
-                            .category(content.getCategory())
-                            .build();
+                    ContentResponse contentResponse = new ContentResponse(
+                            content.getContentId(),
+                            content.getTitle(),
+                            content.getDescription(),
+                            content.getCategory()
+                    );
 
                     int viewCount = getViewCount(content.getContentId());
 
-                    return ContentWithViewCountResponse.builder()
-                            .content(contentResponse)
-                            .viewCount(viewCount)
-                            .build();
+                    return new ContentWithViewCountResponse(
+                            contentResponse,
+                            viewCount
+                    );
                 });
     }
 

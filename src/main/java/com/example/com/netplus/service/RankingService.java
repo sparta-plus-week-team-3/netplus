@@ -61,7 +61,7 @@ public class RankingService {
 
         // 조회수를 포함한 컨텐츠 목록 반환
         return contents.stream()
-                .map(content -> new ContentResponse(content, getViewCount(content.getContentId())))
+                .map(content -> ContentResponse.fromEntity(content))
                 .collect(Collectors.toList());
     }
 

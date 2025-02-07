@@ -32,12 +32,12 @@ public class EventService {
     @Transactional
     public EventResponse createEvent(CreateEventRequest request) {
         // 시작시간 -1시간인지 확인
-        validateUpdateDeleteDeadline(request.getStartDateTime());
+        validateUpdateDeleteDeadline(request.startDateTime());
 
         Event event = new Event(request);
         Event savedEvent = eventRepository.save(event);
 
-        createCoupons(savedEvent, request.getMax());
+        createCoupons(savedEvent, request.max());
 
         return EventResponse.toDto(savedEvent);
     }
@@ -62,14 +62,14 @@ public class EventService {
 
     @Transactional
     public EventResponse updateEvent(Long eventId, UpdateEventRequest request) {
-        validateUpdateDeleteDeadline(request.getStartDateTime());
+        validateUpdateDeleteDeadline(request.startDateTime());
 
         existById(eventId);
         Event foundEvent = eventRepository.getReferenceById(eventId);
         foundEvent.update(request);
 
         couponRepository.deleteCouponsByEvent(foundEvent);
-        createCoupons(foundEvent, request.getMax());
+        createCoupons(foundEvent, request.max());
 
         return EventResponse.toDto(foundEvent);
     }
