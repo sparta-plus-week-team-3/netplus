@@ -29,20 +29,20 @@ public class Event {
     private LocalDateTime couponExpirationDateTime;
 
     public Event(CreateEventRequest request) {
-        this.name = request.getName();
-        this.description = request.getDescription();
-        this.max = request.getMax();
-        this.startDateTime = request.getStartDateTime();
-        this.endDateTime = request.getEndDateTime();
-        this.couponExpirationDateTime = request.getCouponExpirationDateTime();
+        this.name = request.name();
+        this.description = request.description();
+        this.max = request.max();
+        this.startDateTime = request.startDateTime();
+        this.endDateTime = request.endDateTime();
+        this.couponExpirationDateTime = request.couponExpirationDateTime();
     }
 
     public void update(UpdateEventRequest request) {
-        this.name = request.getName();
-        this.description = request.getDescription();
-        this.max = request.getMax();
-        this.startDateTime = request.getStartDateTime();
-        this.endDateTime = request.getEndDateTime();
-        this.couponExpirationDateTime = request.getCouponExpirationDateTime();
+        this.name = request.name();
+        this.description = request.description();
+        this.max = request.max();
+        this.startDateTime = request.startDateTime();
+        this.endDateTime = request.endDateTime();
+        this.couponExpirationDateTime = request.couponExpirationDateTime();
     }
 }
