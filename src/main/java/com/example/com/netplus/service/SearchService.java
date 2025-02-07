@@ -27,7 +27,7 @@ public class SearchService {
         saveQuery(queryString);
 
         Pageable pageable = PageRequest.of(0, 10);
-        Page<ContentResponse> contentResponsePage = contentRepository.findContentLike(queryString, pageable).map(contentService::toResponse);
+        Page<ContentResponse> contentResponsePage = contentRepository.findContentLike(queryString, pageable).map(ContentResponse::fromEntity);
 //        Page<ContentResponse> contentResponsePage = Page.empty();
         return contentResponsePage;
     }
