@@ -135,7 +135,7 @@ public class ContentService {
     }
 
     @Cacheable(value = "content", key = "#id")
-    public ContentWithViewCountResponse getContentWithViewCount(Long id, String userId) {
+    public ContentWithViewCountResponse getContentWithViewCount(Long id, Long userId) {
         // 컨텐츠를 조회하고 조회수를 증가시켜 반환
         Content content = contentRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND));
@@ -155,7 +155,7 @@ public class ContentService {
     }
 
     @Transactional
-    public int incrementViewCount(Long contentId, String userId) {
+    public int incrementViewCount(Long contentId, Long userId) {
         // 사용자별로 조회수 증가를 처리
         String viewKey = VIEW_KEY_PREFIX + contentId;
         String userViewKey = VIEWED_USER_KEY_PREFIX + userId + ":" + contentId;

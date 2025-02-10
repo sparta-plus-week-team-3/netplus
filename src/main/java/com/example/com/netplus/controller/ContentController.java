@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -98,7 +99,7 @@ public class ContentController {
     }
 
     @GetMapping("/{contentId}/details")
-    public ResponseEntity<ContentWithViewCountResponse> getContent(@PathVariable Long contentId, @RequestHeader("User-Id") String userId) {
+    public ResponseEntity<ContentWithViewCountResponse> getContent(@PathVariable Long contentId, @AuthenticationPrincipal Long userId) {
         // ContentService에서 조회한 컨텐츠 정보와 조회수를 반환
         ContentWithViewCountResponse content = contentService.getContentWithViewCount(contentId, userId);
         return ResponseEntity.ok(content);
